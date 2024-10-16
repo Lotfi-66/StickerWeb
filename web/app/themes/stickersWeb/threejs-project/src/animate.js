@@ -1,209 +1,121 @@
-// main.js
-(function() {
-    var scene, camera, renderer, logo, raycaster, underlogoShape;
-    var isLogoVisible = false;
-    var isAnimating = false;
-    var animationProgress = 0;
-    var isUnderlogoVisible = true;
+// animate.js
+function animate(logos, renderers, scenes, cameras, underlogos) {
+    if (!logos || !Array.isArray(logos)) {
+        console.error("Les logos doivent être un tableau");
+        return;
+    }
 
-    function loadShader(url, callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                callback(xhr.responseText);
-            }
+    const raycaster = new THREE.Raycaster();
+    let isAnimating = true;
+
+    // Préparez les données des logos
+    const logoData = logos.map(function(logo, index) {
+        const underlogo = underlogos[index];
+
+        // Initialisation des uniformes pour chaque logo
+        const uniforms = logo.material.uniforms;
+        if (!uniforms.unrollProgress) uniforms.unrollProgress = { value: 1 };
+        if (!uniforms.time) uniforms.time = { value: 0 };
+        if (!uniforms.rotationX) uniforms.rotationX = { value: 0 };
+        if (!uniforms.rotationY) uniforms.rotationY = { value: 0 };
+        if (!uniforms.mousePosition) uniforms.mousePosition = { value: new THREE.Vector2(0, 0) };
+
+        // Rendre le logo et l'underlogo visibles immédiatement
+        logo.visible = true;
+        underlogo.visible = true;
+
+        // Ajouter à la scène
+        scenes[index].add(underlogo);
+
+        return {
+            logo: logo,
+            underlogo: underlogo,
+            uniforms: uniforms,
+            unrollProgress: 1,
+            isMouseOver: false,
+            mouseX: 0,
+            mouseY: 0,
+            targetRotationX: 0,
+            targetRotationY: 0,
         };
-        xhr.send();
-    }
+    });
 
-    function init() {
-        var themeUrl = window.themeUrl || '';
+    function animateFrame() {
+        requestAnimationFrame(animateFrame);
 
-        // Chargement des shaders
-        loadShader(themeUrl + '/threejs-project/src/shaders/vertexShader.glsl', function(vertexShaderSource) {
-            loadShader(themeUrl + '/threejs-project/src/shaders/fragmentShader.glsl', function(fragmentShaderSource) {
-                loadShader(themeUrl + '/threejs-project/src/shaders/underlogoVertexShader.glsl', function(underlogoVertexShaderSource) {
-                    loadShader(themeUrl + '/threejs-project/src/shaders/underlogoFragmentShader.glsl', function(underlogoFragmentShaderSource) {
-                        initScene(vertexShaderSource, fragmentShaderSource, underlogoVertexShaderSource, underlogoFragmentShaderSource);
-                    });
-                });
+        if (isAnimating) {
+            var allUnrolled = true;
+            logoData.forEach(function(data) {
+                data.unrollProgress -= 0.01; 
+                if (data.unrollProgress > 0) {
+                    allUnrolled = false;
+                } else {
+                    data.unrollProgress = 0;
+                    data.underlogo.visible = false;
+                }
+                data.uniforms.unrollProgress.value = data.unrollProgress;
             });
-        });
-    }
-
-    function initScene(vertexShaderSource, fragmentShaderSource, underlogoVertexShaderSource, underlogoFragmentShaderSource) {
-        // Création de la scène
-        scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x111111);
-
-        // Configuration de la caméra
-        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 5;
-
-        // Configuration du renderer
-        renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('threejs-container').appendChild(renderer.domElement);
-
-        // Création du raycaster pour la détection de la souris
-        raycaster = new THREE.Raycaster();
-
-        // Chargement des textures
-        var textureLoader = new THREE.TextureLoader();
-        textureLoader.load(window.themeUrl + '/threejs-project/public/BENOW.png', function(logoTexture) {
-            textureLoader.load(window.themeUrl + '/threejs-project/public/Holo.jpg', function(holoTexture) {
-                createMaterials(vertexShaderSource, fragmentShaderSource, underlogoVertexShaderSource, underlogoFragmentShaderSource, logoTexture, holoTexture);
-            });
-        });
-    }
-
-    function createMaterials(vertexShaderSource, fragmentShaderSource, underlogoVertexShaderSource, underlogoFragmentShaderSource, logoTexture, holoTexture) {
-        var material = new THREE.ShaderMaterial({
-            vertexShader: vertexShaderSource,
-            fragmentShader: fragmentShaderSource,
-            uniforms: {
-                logoTexture: { value: logoTexture },
-                holoTexture: { value: holoTexture },
-                time: { value: 0 },
-                rotationX: { value: 0 },
-                rotationY: { value: 0 },
-                mousePosition: { value: new THREE.Vector2(0, 0) },
-                unrollProgress: { value: 0 },
-                borderColor: { value: new THREE.Color(0xffffff) },
-                borderThickness: { value: 0.01 },
-                underlogoColor: { value: new THREE.Color(0xffffff) },
-                backgroundColor: { value: new THREE.Color(0xffffff) }
-            },
-            transparent: true,
-            side: THREE.DoubleSide
-        });
-
-        // Création de la géométrie et du mesh du logo
-        var geometry = new THREE.PlaneGeometry(2, 2, 32, 32);
-        logo = new THREE.Mesh(geometry, material);
-        logo.visible = false; // Le logo est initialement caché
-        logo.isMouseOver = false;
-        logo.targetRotationX = 0;
-        logo.targetRotationY = 0;
-        scene.add(logo);
-
-        // Création de la forme sous le logo
-        var underlogoGeometry = new THREE.PlaneGeometry(2.2, 2.2, 32, 32);
-        var underlogoMaterial = new THREE.ShaderMaterial({
-            uniforms: {
-                color: { value: new THREE.Color(0xffffff) },
-                borderColor: { value: new THREE.Color(0xffffff) },
-                borderThickness: { value: 0.05 },
-                logoTexture: { value: logoTexture },
-                depth: { value: 0.6 },
-            },
-            vertexShader: underlogoVertexShaderSource,
-            fragmentShader: underlogoFragmentShaderSource,
-            transparent: true
-        });
-        
-        underlogoShape = new THREE.Mesh(underlogoGeometry, underlogoMaterial);
-        underlogoShape.position.z = -0.01;
-        scene.add(underlogoShape);
-
-        // Ajout du bouton
-        addButton();
-
-        // Ajout des écouteurs d'événements
-        renderer.domElement.addEventListener('mousemove', onMouseMove);
-        window.addEventListener('resize', onWindowResize);
-
-        // Démarrer l'animation
-        animate();
-    }
-
-    function addButton() {
-        var button = document.createElement('button');
-        button.textContent = 'Activer le logo animé';
-        button.style.position = 'absolute';
-        button.style.bottom = '20px';
-        button.style.left = '50%';
-        button.style.transform = 'translateX(-50%)';
-        button.style.padding = '10px 20px';
-        button.style.fontSize = '16px';
-        button.style.cursor = 'pointer';
-        
-        button.addEventListener('click', toggleLogo);
-        
-        document.getElementById('threejs-container').appendChild(button);
-    }
-
-    function toggleLogo() {
-        isLogoVisible = !isLogoVisible;
-        logo.visible = isLogoVisible;
-        
-        if (isLogoVisible) {
-            isAnimating = true;
-            animationProgress = 0;
-            isUnderlogoVisible = true;
-            underlogoShape.visible = true;
+            if (allUnrolled) {
+                isAnimating = false;
+            }
         } else {
-            isAnimating = false;
-            animationProgress = 0;
-            logo.material.uniforms.unrollProgress.value = 0;
-            isUnderlogoVisible = false;
-            underlogoShape.visible = false;
+            logoData.forEach(function(data) {
+                if (data.isMouseOver) {
+                    data.logo.rotation.x += (data.targetRotationX - data.logo.rotation.x) * 0.1;
+                    data.logo.rotation.y += (data.targetRotationY - data.logo.rotation.y) * 0.1;
+                } else {
+                    data.logo.rotation.x += (0 - data.logo.rotation.x) * 0.05;
+                    data.logo.rotation.y += (0 - data.logo.rotation.y) * 0.05;
+                }
+                data.uniforms.time.value += 0.016;
+                data.uniforms.rotationX.value = data.logo.rotation.x;
+                data.uniforms.rotationY.value = data.logo.rotation.y;
+            });
         }
+
+        logoData.forEach(function(data, index) {
+            renderers[index].render(scenes[index], cameras[index]);
+        });
     }
 
     function onMouseMove(event) {
         event.preventDefault();
 
-        var rect = renderer.domElement.getBoundingClientRect();
-        var mouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-        var mouseY = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        logoData.forEach(function(data, index) {
+            const rect = renderers[index].domElement.getBoundingClientRect();
+            const mouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            const mouseY = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
-        raycaster.setFromCamera(new THREE.Vector2(mouseX, mouseY), camera);
-        var intersects = raycaster.intersectObject(logo);
-        logo.isMouseOver = intersects.length > 0;
+            raycaster.setFromCamera(new THREE.Vector2(mouseX, mouseY), cameras[index]);
+            const intersects = raycaster.intersectObject(data.logo);
 
-        if (logo.isMouseOver && isLogoVisible) {
-            logo.targetRotationY = mouseX * 1.5;
-            logo.targetRotationX = mouseY * 1.5;
-            logo.material.uniforms.mousePosition.value.set(mouseX, mouseY);
-        }
+            if (intersects.length > 0) {
+                data.isMouseOver = true;
+                data.targetRotationY = mouseX * 1.5;
+                data.targetRotationX = mouseY * 1.5;
+            } else {
+                data.isMouseOver = false;
+            }
+        });
     }
 
     function onWindowResize() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        cameras.forEach(function(camera) {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+        renderers.forEach(function(renderer) {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
     }
 
-    function animate() {
-        requestAnimationFrame(animate);
+    document.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('resize', onWindowResize);
 
-        if (isLogoVisible) {
-            logo.rotation.x += (logo.targetRotationX - logo.rotation.x) * 0.1;
-            logo.rotation.y += (logo.targetRotationY - logo.rotation.y) * 0.1;
-            
-            logo.material.uniforms.time.value += 0.01;
+    animateFrame();
 
-            if (isAnimating) {
-                animationProgress += 0.01;
-                if (animationProgress >= 1) {
-                    isAnimating = false;
-                    animationProgress = 1;
-                    
-                    if (isUnderlogoVisible) {
-                        isUnderlogoVisible = false;
-                        underlogoShape.visible = false;
-                    }
-                }
-                logo.material.uniforms.unrollProgress.value = animationProgress;
-            }
-        }
-
-        renderer.render(scene, camera);
-        window.animateThreeJS(logo, renderer, scene, camera);
-    }
-
-    // Initialisation de la scène et démarrage de l'animation
-    document.addEventListener('DOMContentLoaded', init);
-})();
+    return function cleanup() {
+        document.removeEventListener('mousemove', onMouseMove);
+        window.removeEventListener('resize', onWindowResize);
+    };
+}

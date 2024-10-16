@@ -4,6 +4,19 @@
 
 @extends('layouts.app')
 
+@section('header')
+<header>
+  <nav>
+    <ul>
+      <li><a href="{{ home_url('/') }}">Accueil</a></li>
+      <li><a href="{{ home_url('/about') }}">À propos</a></li>
+      <li><a href="{{ home_url('/services') }}">Services</a></li>
+      <li><a href="{{ home_url('/contact') }}">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+@endsection
+
 @section('content')
 <div class="home-container">
   <div id="threejs-container"></div>
@@ -15,6 +28,7 @@
 @endsection
 
 
+{{-- 
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -27,4 +41,4 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
-@endsection
+@endsection --}}

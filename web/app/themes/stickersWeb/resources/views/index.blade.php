@@ -1,4 +1,4 @@
-{{--
+{{-- 
   Template Name: Home
 --}}
 
@@ -31,7 +31,7 @@
   @include('sections.sidebar')
 @endsection
 
-@section('scripts')
+{{-- @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   if (typeof init === 'function' && typeof animate === 'function') {
@@ -42,4 +42,4 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
-@endsection
+@endsection --}}
