@@ -1,0 +1,80 @@
+@import "sanitize";
+@import "sanitize_assets";
+@import "sanitize_forms";
+@import "delete_filigrane";
+
+a{
+  color: $dark-font;
+  &:active{
+    color: $dark-font;
+  }
+  &:hover{
+    color: lighten($dark-font, 15%);
+  }
+}
+
+.strong{
+  font-weight: 700;
+}
+
+
+html {
+  font-size: 62.5%;
+  scroll-behavior: smooth;
+  margin-bottom: 0;
+}
+
+.grecaptcha-badge {
+  display: none !important;
+}
+
+body {
+  font-weight: 500;
+  font-size: 1.6em;
+  @media screen and (min-width: 1920px) {
+    font-size: 1.8em;
+  }
+
+  &.active {
+    height: 100vh;
+    overflow-y: hidden;
+  }
+}
+
+* {
+  font-family: Montserrat, serif;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  &:before, &:after {
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+}
+
+
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5 {
+  font-family: TenorSans, serif;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex-grow: 1;
+}
+
+
+p, li, a {
+  font-weight: 500;
+  margin: 0 0 1.6rem;
+}
+
+a {
+  text-decoration: none;
+}

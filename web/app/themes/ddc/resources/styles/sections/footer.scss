@@ -1,0 +1,129 @@
+footer {
+  padding: 3rem 0;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+
+  .footer__nous-retrouver {
+    .h1 {
+      text-align: center;
+    }
+
+    .link-container {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+
+      .link {
+        margin: 1rem;
+        text-align: center;
+        display: inline-flex;
+        flex-direction: column;
+        &:hover{
+          color: $maron-clair;
+          transition: color 0.4s;
+        }
+
+        svg {
+          width: 4rem;
+          height: 4rem;
+          margin: 0rem auto 1.6rem;
+          color: $maron-clair;
+        }
+
+        p {
+          display: inline-flex;
+          justify-content: center;
+        }
+      }
+    }
+
+  }
+
+  .footer__menu{
+    margin: 3rem auto;
+    .footer__menu--ul{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      a{
+        &:hover{
+          color: $maron-clair;
+          transition: color 0.4s;
+        }
+      }
+    }
+
+  }
+
+  .mentions{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 3rem;
+    color: $light-font;
+    font-size: 1.4rem;
+    a{
+      margin: 0.8rem 1.5rem;
+      &:hover{
+        color: $maron-clair;
+        transition: color 0.4s;
+      }
+    }
+  }
+  .footer__leafs{
+    svg{
+      position: absolute;
+      z-index: -1;
+      opacity: 0.2;
+      color: #DDC4A6;
+      width: 39rem;
+      height: 39rem;
+      &:nth-child(1){
+        top: 25%;
+        left: -15rem;
+      }
+      &:nth-child(2){
+        top: 50%;
+        right: -15rem;
+        transform: rotateY(180deg);
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 768px) {
+  footer {
+
+    .footer__menu{
+      .footer__menu--ul{
+        flex-direction: row;
+        justify-content: center;
+        width: 100%;
+        li{
+          margin: 1.6rem;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1280px){
+  footer{
+    .footer__leafs{
+      svg{
+        width: 57rem;
+        height: 57rem;
+        &:nth-child(1){
+          left: -15rem;
+        }
+        &:nth-child(2){
+          right: -15rem;
+        }
+      }
+    }
+  }
+}

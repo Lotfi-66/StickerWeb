@@ -1,0 +1,143 @@
+.contact {
+  .wave {
+    position: relative;
+    z-index: -2;
+
+    svg {
+      display: block;
+      width: 100%;
+      max-width: none;
+      color: $beige;
+      margin-bottom: -2vw;
+      height: 14vw;
+    }
+
+    &.bottom {
+      margin-bottom: 0;
+      margin-top: -2vw;
+
+      svg {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  .contact__content {
+    background-color: $beige;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    h1 {
+      color: $beige-clair;
+    }
+
+    .input-part {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 80%;
+      max-width: 76.3rem;
+      margin: auto;
+      p{
+        width: 100%;
+        color: $light-font;
+        &:first-of-type{
+          margin-bottom: 0;
+        }
+        &.little{
+          font-size: 1.2rem;
+        }
+      }
+    }
+
+    .wpcf7-form-control-wrap {
+      display: inline-block;
+      width: 100%;
+      margin-bottom: 1.6rem;
+    }
+
+    input, select, textarea {
+      background-color: $beige-clair;
+      color: $dark-font;
+      padding: 1rem 1.5rem;
+      border-radius: 2rem;
+      width: 100%;
+      border: 0;
+    }
+
+    select {
+      background-size: 4rem;
+      background-position: right;
+    }
+
+    .wpcf7-acceptance {
+      font-size: 1.2rem;
+      padding-left: 1.5rem;
+      a{
+        color: $maron;
+        &:hover
+        {
+          color: darken($light-font, 10%);
+        }
+      }
+
+      .wpcf7-list-item-label {
+        position: relative;
+        label{
+          display: flex;
+        }
+
+        &:before {
+          position: absolute;
+          content: "";
+          left: -2rem;
+          top: 0;
+          width: 1.4rem;
+          height: 1.4rem;
+          background-color: $white;
+          border: 1px solid $black;
+          border-radius: 0.2rem;
+        }
+      }
+
+      input[name="mentions"] {
+        display: none;
+      }
+      input[name="mentions"]:checked + .wpcf7-list-item-label:before {
+        background-color: #F6C280;
+
+      }
+    }
+
+    .wpcf7-select {
+      background-position: right 1rem center;
+      background-size: 3rem;
+      background-image: url('../../images/svg/fleche-droite.svg');
+    }
+
+    .submit-part {
+      p {
+        text-align: center;
+      }
+
+      input {
+        width: auto;
+        color: $beige;
+        border: 1px solid $beige-clair;
+        cursor: pointer;
+        margin: auto;
+        font-size: 1.8rem;
+        padding: 1rem 3rem;
+        transition: color 0.4s;
+
+        &:hover {
+          background-color: $beige;
+          color: $beige-clair;
+        }
+
+      }
+    }
+
+  }
+}

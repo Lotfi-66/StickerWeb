@@ -1,0 +1,41 @@
+.img-clip{
+  mask-size: 100% 100%;
+  background-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
+
+  background-image: url('../../images/svg/mask/mask-circle.svg');
+  -webkit-mask-image: url('../../images/svg/mask/mask-circle.svg');
+  mask-image: url('../../images/svg/mask/mask-circle.svg');
+
+  &.l-side {
+    img{
+      min-height: 28rem;
+    }
+    @media screen and (min-width: 768px) {
+      background-image: url('../../images/svg/mask/mask-potatoe.svg');
+      -webkit-mask-image: url('../../images/svg/mask/mask-potatoe.svg');
+      mask-image: url('../../images/svg/mask/mask-potatoe.svg');
+    }
+    @media screen and (min-width: 1280px) {
+      background-image: url('../../images/svg/mask/mask-circle.svg');
+      -webkit-mask-image: url('../../images/svg/mask/mask-circle.svg');
+      mask-image: url('../../images/svg/mask/mask-circle.svg');
+    }
+
+  }
+  &.picture{
+    background-image: url('../../images/svg/mask/mask-potatoe.svg');
+    -webkit-mask-image: url('../../images/svg/mask/mask-potatoe.svg');
+    mask-image: url('../../images/svg/mask/mask-potatoe.svg');
+  }
+
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+
+  }
+}

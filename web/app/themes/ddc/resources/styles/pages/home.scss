@@ -1,0 +1,121 @@
+.rouge {
+  color: red;
+  background-color: blue;
+}
+
+@import "../utilities/variables";
+@import "../sections/presentation";
+@import "../sections/contact-block";
+@import "../sections/places";
+@import "../sections/faq";
+@import "../components/card-gite";
+
+main{
+  width: 100%;
+  overflow: hidden;
+}
+
+.gites {
+  position: relative;
+  z-index: 2;
+  margin: 6rem auto;
+
+
+
+  .gites__title {
+    color: $beige;
+    text-align: center;
+  }
+
+  .swiper {
+    .swiper-slide {
+      overflow: hidden;
+      height: auto; /* Permet de s'ajuster à la hauteur du contenu */
+      .gite-card {
+        margin: auto;
+      }
+    }
+  }
+  .swiper-button-next, .swiper-button-prev {
+    display: block;
+    filter: drop-shadow(0.1rem 0.5rem 0.1rem rgba(0, 0, 0, 0.8));
+    @media screen and (min-width: 760px){
+      display: block;
+    }
+    color: $light-font;
+    top: 75%;
+  }
+  .swiper-button-next{
+    right: 10%;
+  }
+  .swiper-button-prev{
+    left: 10%;
+  }
+  .pagination-gite {
+    display: flex;
+    flex-direction: column;
+    flex-flow: wrap;
+    justify-content: center;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    @media screen and (min-width: 760px){
+      margin-bottom: 0;
+    }
+
+    .swiper-pagination-bullet {
+      width: auto;
+      height: auto;
+      background-color: $beige;
+      border: 0.2rem solid $beige;
+      color: $btn-secondary;
+      border-radius: 7.8rem;
+      cursor: pointer;
+      opacity: 1;
+      margin-top: 1rem;
+
+      &.swiper-pagination-bullet-active {
+        background-color: $btn-secondary;
+        color: $beige;
+      }
+    }
+  }
+}
+
+
+
+.leaf{
+  position: relative;
+  width: 100%;
+  svg{
+    position: absolute;
+    color: $beige;
+    opacity: 0.2;
+    z-index: -1;
+    top: 100%;
+    left: -15rem;
+    width: 57rem;
+    height: 57rem;
+    &:nth-child(2){
+      top: unset;
+      bottom: 105rem;
+      left: unset;
+      right: -20rem;
+      transform: rotateY(180deg);
+    }
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .gites {
+    margin: 9rem auto;
+    .gites-card{
+      height: 42vw;
+    }
+
+    .img-clip{
+      img{
+        height: 42vw;
+      }
+    }
+  }
+}

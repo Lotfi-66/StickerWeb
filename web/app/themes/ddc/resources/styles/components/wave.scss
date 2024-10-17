@@ -1,0 +1,20 @@
+.wave {
+  position: relative;
+  z-index: -2;
+  svg {
+    display: block;
+    width: 100%;
+    max-width: none;
+    color: $maron-clair;
+    margin-bottom: -2vw;
+    height: 14vw;
+  }
+
+  &.bottom {
+    margin-bottom: 0;
+    margin-top: -2vw;
+    svg {
+      transform: rotate(180deg);
+    }
+  }
+}
