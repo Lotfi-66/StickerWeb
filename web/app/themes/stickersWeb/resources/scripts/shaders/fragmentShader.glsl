@@ -28,26 +28,22 @@ vec3 adjustContrast(vec3 color, float contrast) {
 void main() {
     vec4 logoColor = texture2D(logoTexture, vUv);
     
-    // Augmenter l'amplitude du mouvement
     vec2 holoUv = vUv * 0.8 + 0.1;
-    holoUv.y += rotationX * 0.5; // Augmenté de 0.2 à 0.5
-    holoUv.x += rotationY * 0.5; // Augmenté de 0.2 à 0.5
+    holoUv.y -= rotationX * 0.2;
+    holoUv.x += rotationY * 0.2;
     
-    // Assurer que les coordonnées UV restent dans la plage [0, 1]
-    holoUv = fract(holoUv);
-    
-    vec4 holoColor = texture2D(holoTexture, holoUv);
+    vec4 holoColor = texture2D(holoTexture, fract(holoUv));
     
     // Lumière venant d'en haut avec intensité réduite
     vec3 lightDir = normalize(vec3(0.0, 1.0, 0.1));
-    float diffuse = max(dot(vNormal, lightDir), 0.0) * 0.01;
+    float diffuse = max(dot(vNormal, lightDir), 0.0) * 0.01; // Réduire l'intensité à 50%
     
     // Rendre l'effet holographique plus transparent
-    float holoAlpha = 0.2;
+    float holoAlpha = 0.2; // Ajustez cette valeur entre 0.0 et 1.0 pour contrôler la transparence
     vec3 mixedColor = mix(logoColor.rgb, holoColor.rgb, holoAlpha);
     
     // Appliquer les effets holographiques
-    mixedColor += holoColor.rgb * sin(time * 2.0) * 0.8;
+    mixedColor += holoColor.rgb * sin(time * 2.0) * 0.5; // Réduire l'intensité de l'effet
     
     // Effet de brillance sur le bord décollé (symétrique)
     float peelHighlight = pow(abs(vPeel - 0.5) * 2.0, 4.0) * 0.5;
@@ -60,13 +56,13 @@ void main() {
     mixedColor = mix(mixedColor, blurredLogo.rgb, mouseGlow * 0.3);
     
     // Appliquer l'éclairage
-    mixedColor *= (diffuse + 1.9);
+    mixedColor *= (diffuse + 1.9); // Ajouter une lumière ambiante de base
     
     // Diminuer légèrement la luminosité globale
     mixedColor *= 0.2;
     
     // Ajuster le contraste
-    float contrastValue = 1.8;
+    float contrastValue = 1.8; // Augmenter cette valeur pour plus de contraste
     mixedColor = adjustContrast(mixedColor, contrastValue);
     
     // Conserver l'alpha original du logo

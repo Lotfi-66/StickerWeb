@@ -12,7 +12,7 @@ void main() {
 
     // Calcul de l'effet de décollement diagonal
     float diagonalProgress = (vUv.x + vUv.y) * 0.5;
-    vPeel = smoothstep(-0.2, 1.0, (1.0 - unrollProgress - diagonalProgress) / 1.2);
+    vPeel = smoothstep(-0.2, 1.0, (unrollProgress - diagonalProgress) / 1.2);
 
     vec3 pos = position;
     vec3 norm = normal; // Utiliser la normale originale

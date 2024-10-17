@@ -11,7 +11,7 @@
 |
 */
 
-if (! file_exists($composer = __DIR__.'/vendor/autoload.php')) {
+if (!file_exists($composer = __DIR__ . '/vendor/autoload.php')) {
     wp_die(__('Error locating autoloader. Please run <code>composer install</code>.', 'sage'));
 }
 
@@ -29,7 +29,7 @@ require $composer;
 |
 */
 
-if (! function_exists('\Roots\bootloader')) {
+if (!function_exists('\Roots\bootloader')) {
     wp_die(
         __('You need to install Acorn to use this theme.', 'sage'),
         '',
@@ -56,7 +56,7 @@ if (! function_exists('\Roots\bootloader')) {
 
 collect(['setup', 'filters'])
     ->each(function ($file) {
-        if (! locate_template($file = "app/{$file}.php", true, true)) {
+        if (!locate_template($file = "app/{$file}.php", true, true)) {
             wp_die(
                 /* translators: %s is replaced with the relative file path */
                 sprintf(__('Error locating <code>%s</code> for inclusion.', 'sage'), $file)
@@ -75,14 +75,17 @@ collect(['setup', 'filters'])
 |
 */
 
+// Enqueue Scripts
 add_action('wp_enqueue_scripts', function () {
     wp_enqueue_script('three-js', 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js', [], null, true);
     wp_enqueue_script('threejs-animate', get_template_directory_uri() . '/threejs-project/src/animate.js', ['three-js'], null, true);
     wp_enqueue_script('threejs-main', get_template_directory_uri() . '/threejs-project/src/main.js', ['three-js', 'threejs-animate'], null, true);
-    
+
+    // Passer l'URL du thème à votre JavaScript
     wp_add_inline_script('threejs-main', 'window.themeUrl = "' . get_template_directory_uri() . '";', 'before');
 });
 
+// Shortcode pour intégrer la scène Three.js
 add_shortcode('threejs_scene', function () {
     ob_start();
     ?>
@@ -90,3 +93,27 @@ add_shortcode('threejs_scene', function () {
     <?php
     return ob_get_clean();
 });
+
+// Charger les shaders via AJAX
+add_action('wp_ajax_load_shaders', 'load_shaders');
+add_action('wp_ajax_nopriv_load_shaders', 'load_shaders');
+
+function load_shaders() {
+    $shaders_dir = get_template_directory() . '/threejs-project/src/shaders/';
+    
+    // Charger les shaders
+    $vertex_shader = file_get_contents($shaders_dir . 'vertexShader.glsl');
+    $fragment_shader = file_get_contents($shaders_dir . 'fragmentShader.glsl');
+    $underlogo_vertex_shader = file_get_contents($shaders_dir . 'underlogoVertexShader.glsl');
+    $underlogo_fragment_shader = file_get_contents($shaders_dir . 'underlogoFragmentShader.glsl');
+
+    // Retourner les shaders au format JSON
+    echo json_encode(array(
+        'vertexShader' => $vertex_shader,
+        'fragmentShader' => $fragment_shader,
+        'underlogoVertexShader' => $underlogo_vertex_shader,
+        'underlogoFragmentShader' => $underlogo_fragment_shader
+    ));
+    
+    wp_die(); // Terminer correctement l'exécution
+}

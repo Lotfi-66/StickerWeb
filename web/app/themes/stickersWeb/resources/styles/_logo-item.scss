@@ -1,0 +1,53 @@
+// _logo-item.scss
+
+.logo-item {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    padding: 20px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: scale(1.05);
+    }
+
+    .logo-name {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        font-size: 24px;
+        color: $secondary-color;
+        text-align: center;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: opacity 0.3s ease;
+    }
+
+    canvas {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain;
+        @include border-radius(10px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    &.active {
+        .logo-name {
+            opacity: 0;
+        }
+
+        canvas {
+            opacity: 1;
+        }
+    }
+}

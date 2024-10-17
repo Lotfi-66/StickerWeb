@@ -1,14 +1,14 @@
 /**
- * Compiler configuration
+ * Configuration du compilateur
  *
- * @see {@link https://roots.io/sage/docs sage documentation}
- * @see {@link https://bud.js.org/learn/config bud.js configuration guide}
+ * @see {@link https://roots.io/sage/docs documentation sage}
+ * @see {@link https://bud.js.org/learn/config guide de configuration bud.js}
  *
  * @type {import('@roots/bud').Config}
  */
 export default async (app) => {
   /**
-   * Application assets & entrypoints
+   * Assets de l'application et points d'entrée
    *
    * @see {@link https://bud.js.org/reference/bud.entry}
    * @see {@link https://bud.js.org/reference/bud.assets}
@@ -19,14 +19,14 @@ export default async (app) => {
     .assets(['images']);
 
   /**
-   * Set public path
+   * Définir le chemin public
    *
    * @see {@link https://bud.js.org/reference/bud.setPublicPath}
    */
   app.setPublicPath('/app/themes/stickersWeb/public/');
 
   /**
-   * Development server settings
+   * Paramètres du serveur de développement
    *
    * @see {@link https://bud.js.org/reference/bud.setUrl}
    * @see {@link https://bud.js.org/reference/bud.setProxyUrl}
@@ -38,9 +38,9 @@ export default async (app) => {
     .watch(['resources/views', 'app']);
 
   /**
-   * Generate WordPress `theme.json`
+   * Générer le `theme.json` de WordPress
    *
-   * @note This overwrites `theme.json` on every build.
+   * @note Ceci écrase `theme.json` à chaque build.
    *
    * @see {@link https://bud.js.org/extensions/sage/theme.json}
    * @see {@link https://developer.wordpress.org/block-editor/how-to-guides/themes/theme-json}
@@ -73,5 +73,47 @@ export default async (app) => {
       typography: {
         customFontSize: false,
       },
-    })
+    });
+
+  /**
+   * Configurer les alias pour des imports plus faciles
+   */
+  app.alias({
+    '@scripts': app.path('@src/scripts'),
+    '@styles': app.path('@src/styles'),
+  });
+
+  /**
+   * Configurer Babel
+   */
+  app.babel((config) => {
+    config.presets.push('@babel/preset-env');
+    return config;
+  });
+
+  /**
+   * Configurer PostCSS
+   */
+  app.postcss((config) => {
+    config.plugins.push(
+      require('autoprefixer'),
+      require('postcss-preset-env')({
+        stage: 3,
+        features: {
+          'nesting-rules': true,
+        },
+      })
+    );
+    return config;
+  });
+
+  /**
+   * Configurer Webpack
+   */
+  app.webpack((config) => {
+    // Ajoutez ici toute configuration webpack personnalisée si nécessaire
+    return config;
+  });
+
+  return app;
 };
