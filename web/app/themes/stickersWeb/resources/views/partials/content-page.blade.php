@@ -1,7 +1,7 @@
-@php(the_content())
+<article>
+  @include('partials.page-header')
 
-@if ($pagination)
-  <nav class="page-nav" aria-label="Page">
-    {!! $pagination !!}
-  </nav>
-@endif
+  <div class="page-content">
+      {!! the_content() !!}
+  </div>
+</article>

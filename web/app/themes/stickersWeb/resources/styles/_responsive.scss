@@ -1,0 +1,53 @@
+// _responsive.scss
+
+@media (max-width: 1600px) {
+    #app {
+        max-width: $max-width-medium;
+    }
+}
+
+@media (max-width: 1400px) {
+    #app {
+        max-width: 1200px;
+        gap: 30px;
+    }
+}
+
+@media (max-width: 1200px) {
+    #app {
+        max-width: $max-width-small;
+    }
+
+    .logo-item .logo-name {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 992px) {
+    #app {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 800px;
+    }
+}
+
+@media (max-width: 768px) {
+    #app {
+        padding: 80px 20px 40px;
+        gap: $gap-small;
+    }
+
+    .logo-item .logo-name {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 576px) {
+    #app {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+    }
+
+    .logo-item .logo-name {
+        font-size: 16px;
+    }
+}

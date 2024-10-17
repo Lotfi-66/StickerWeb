@@ -1,0 +1,14 @@
+// _layout.scss
+
+#app {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $gap-large;
+    justify-content: center;
+    align-content: start;
+    min-height: calc(100vh - 100px);
+    padding: 100px 40px 40px;
+    box-sizing: border-box;
+    max-width: $max-width-large;
+    margin: 0 auto;
+}

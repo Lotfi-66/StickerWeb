@@ -19,9 +19,16 @@
     "translate:mo": "wp i18n make-mo ./resources/lang ./resources/lang"
   },
   "devDependencies": {
+    "@babel/core": "^7.25.8",
+    "@babel/preset-env": "^7.25.8",
     "@roots/bud": "^6.23.3",
     "@roots/bud-sass": "^6.23.3",
-    "@roots/sage": "^6.23.3"
+    "@roots/sage": "^6.23.3",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "postcss-preset-env": "^10.0.7"
   },
-  "dependencies": {}
+  "dependencies": {
+    "three": "^0.169.0"
+  }
 }
